@@ -1,0 +1,303 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>在线微信对话生成器</title>
+	<meta name="keywords" content="免费在线微信对话生成器" />
+	<meta name="description" content="在线微信对话生成器是一款在线微信聊天对话制作的工具" />
+	<meta name="render" content="webkit">
+	<link rel="icon" href="favicon.png">
+	<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+	<meta content="telephone=no, address=no" name="format-detection">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<script type="text/javascript">
+		var _path = { images: '' }
+		var page = { data: {} }
+	</script>
+	<link rel="stylesheet" href="static/app/css/zui.min.css">
+	<link rel="stylesheet" href="static/app/css/app.css">
+	<link rel="stylesheet" href="static/app/css/wallet.css">
+	<script type="text/javascript" src="static/app/js/common.bundle.js"></script>
+	<script type="text/javascript" src="static/app/js/chat.bundle.js"></script>
+</head>
+<body>
+	<div id="vueApp" class="wrapper">
+		<div class="container-fluid page-content">
+			<div id="pageHeader">微信对话生成器</div>
+			<div class="edit-content">
+				<div class="tab">
+					<ul class="nav nav-tabs">
+						<li class="active"><a data-tab href="#tabContent1">外观设置</a></li>
+						<li><a data-tab href="#tabContent2">对话设置</a></li>
+					</ul>
+					<div class="tab-content">
+						<div class="tab-pane active" id="tabContent1">
+							<!-- 外观设置 -->
+							<div class="view-setting">
+								
+								<div class="view-set-item">
+									<span>消息数目：</span>
+									<input type="text" name="phone-msg-count" class="form-control" v-model.number="setting.message">
+								</div>
+								<div class="view-set-item">
+									<span>聊天标题：</span>
+									<input type="text" class="form-control" v-model="setting.title">
+								</div>
+								<div class="view-set-item">
+									<span>语音模式：</span>
+									<label class="my-radio"><input type="radio" name="phone-voice" v-model="setting.voice" value="1"> 是</label>
+									<label class="my-radio"><input type="radio" name="phone-voice" v-model="setting.voice" value="0" checked> 否</label>
+								</div>
+								<div class="view-set-item">
+									<span>聊天背景：</span>
+									<a class="a-phone-set-bg" href="javascript:;" title="选择背景图">
+										<font>+</font>
+										<img class="img-phone-set-bg" :src="setting.background" />
+										<input @change="setBackground($event)" type="file" />
+										<span @click="deleteBackground" v-if="setting.background != ''">x</span>
+									</a>
+								</div>
+							</div>
+						</div>
+						<!-- 对话设置 -->
+						<div class="tab-pane" id="tabContent2">
+							<div class="dialog-user">
+								<div class="dialog-user-title">编辑和选择用户（<font>第一个用户默认是自己</font>）</div>
+								<div class="dialog-user-items">
+							
+									
+
+									
+									<div v-for="(user, index) in users" class="dialog-user-item">
+										<div class="dialog-user-face">
+											<a class="dialog-user-face-a" href="javascript:;">
+												<input @change="setUserImage($event, index)" type="file"
+													placeholder="点击更换头像">
+												<i :style="'background-image: url(' + user.image + ')'"></i>
+											</a>
+											<input type="text" v-model="user.name" />
+											<a @click="selectUser(index)"
+												:class="['dialog-user-select', {'dialog-user-selected':user.selected}]">选择用户</a>
+											<a v-if="!user.is_me" @click="delUser(index)" class="dialog-user-delete"
+												title="删除用户">x</a>
+										</div>
+									</div>
+									<div class="dialog-user-item">
+										<a @click="addUser" class="dialog-user-item-add" href="javascript:;"
+											title="添加用户">+</a>
+									</div>
+								</div>
+
+								<div class="dialog-user-content-title">发送人：{{getSender()}}</div>
+								<div class="dialog-user-content">
+									<div class="dialog-user-content-panel">
+										<textarea v-model="setting.dialog_content"
+											class="edit-dialog-text form-control"></textarea>
+									</div>
+									<div class="view-setting view-setting2">
+										
+										<div class="view-set-item">
+											<span>事件：</span>
+											<input v-model="setting.dialog_repacket_remark" type="text"
+												class="form-control">
+										</div>
+									</div>
+									<div class="btn-groups">
+										<div class="btn-group">
+											<button @click="addTextDialog" class="btn btn-success">添加文字对话</button>
+											<button class="btn btn-primary btn-send-image">添加图片对话<input
+													@change="addImageDialog($event)" type="file"></button>
+
+										</div>
+										<div class="btn-group">
+											<button @click="addRedpacketDialog" class="btn btn-primary">添加红包对话</button>
+										</div>
+									</div>
+									<button class="btn-clear" @click="cleanDialogs" href="javascript:;">清空聊天内容</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- phone -->
+				<div class="phone-wrap">
+					<div class="phone-content">
+						<div id="phone" class="phone1" style="width: 1750px;height: 2436px;">
+							<div class="phone-top">
+								<div class="phone-nav">
+									<div class="phone-nav-left">
+										<span class="phone-top-title">
+											{{setting.title}}
+										</span>
+										<span class="phone-top-message">
+											{{setting.message}}
+										</span>
+									</div>
+									<div class="phone-nav-center">
+									</div>
+									<div class="phone-nav-right">
+										<div class="phone-nav-more">更多</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="phone-bg">
+								<img @load="onBackgroundLoad($event)" :src="setting.background" />
+							</div>
+
+							<div class="phone-water"></div>
+
+							<div class="phone-body">
+								<div class="wechat-content">
+									<template v-for="(dialog, index) in dialogs">
+										<div :class="['wechat-dialog', {'wechat-dialog-right':dialog.is_me}]">
+											<div v-if="dialog.type != 'notice'" class="wechat-dialog-face">
+												<img :src="getUserById(dialog.user_id).image" />
+											</div>
+
+											<template v-if="dialog.type == 'text'">
+												<div class="wechat-dialog-name">{{dialog.name}}</div>
+												<div class="wechat-dialog-text">{{dialog.content}}</div>
+											</template>
+
+											<template v-if="dialog.type == 'image'">
+												<div class="wechat-dialog-name">{{dialog.name}}</div>
+												<div
+													:class="['wechat-dialog-text', 'wechat-dialog-image', {'wechat-dialog-image-noborder':setting.background != ''}]">
+													<img :src="dialog.image">
+												</div>
+											</template>
+
+											<template v-if="dialog.type == 'voice'">
+												<div class="wechat-dialog-text wechat-dialog-voice">
+													<div v-if="dialog.is_me"
+														:style="{width: getVoiceLength(dialog.time) + 'px'}"></div>
+													<span v-if="dialog.is_me">{{dialog.time}}"</span>
+													<i></i>
+													<span v-if="!dialog.is_me">{{dialog.time}}"</span>
+													<div v-if="!dialog.is_me"
+														:style="{width: getVoiceLength(dialog.time) + 'px'}"></div>
+													<em v-if="!dialog.is_me && dialog.isread == '0'"></em>
+												</div>
+											</template>
+
+											<template v-if="dialog.type == 'notice'">
+												<div class="wechat-dialog-notice">
+													<span
+														:class="[{'wechat-dialog-notice-has-bg':setting.background != ''},{'wechat-dialog-notice-system':dialog.is_system}]"
+														v-html="dialog.content"></span>
+												</div>
+											</template>
+
+											<template v-if="dialog.type == 'transfer' || dialog.type == 'redpacket'">
+												<div
+													:class="['wechat-dialog-text', 'wechat-dialog-trans', {'wechat-dialog-trans-get':dialog.is_get}]">
+													<div
+														:class="['wechat-dialog-trans-content', {'wechat-dialog-redp-content':dialog.type == 'redpacket'}]">
+														<i></i>
+														<div>
+															<span
+																v-if="dialog.type == 'transfer'">¥{{moneyFormat(dialog.money,
+																2, '', false)}}</span>
+															<font v-if="dialog.type == 'transfer'">{{dialog.remark}}
+															</font>
+															<span
+																v-if="dialog.type == 'redpacket'">{{dialog.remark}}</span>
+															<font v-if="dialog.type == 'redpacket' && dialog.is_get">
+																已领取</font>
+														</div>
+													</div>
+													<div class="wechat-dialog-trans-bottom">
+														<span v-if="dialog.type == 'transfer'">微信转账</span>
+														<span v-if="dialog.type == 'redpacket'">微信红包</span>
+													</div>
+												</div>
+											</template>
+
+											<a @click="deleteDialog(index)" class="a-wechat-dialog-del"
+												href="javascript:;" title="删除对话">X</a>
+
+											<div v-if="!dialog.is_get && dialog.type == 'redpacket'"
+												class="a-wechat-dialog-menu">
+												<a @click="redpacketGet(index)">领取</a>
+											</div>
+											<div v-if="!dialog.is_get && dialog.type == 'transfer'"
+												class="a-wechat-dialog-menu">
+												<a @click="transferGet(index)">领取</a>
+											</div>
+										</div>
+									</template>
+
+									<div class="wechat-dialog el-remove">
+										<div class="wechat-dialog-notice">
+											<span class="wechat-dialog-notice-has-bg">2019年5月20日 下午4:20</span>
+										</div>
+										<a class="a-wechat-dialog-del" href="javascript:;" title="删除对话">X</a>
+									</div>
+									<div class="wechat-dialog wechat-dialog-right el-remove">
+										<div class="wechat-dialog-face">
+											<img src="static/app/images/user-face.png" />
+										</div>
+										<div class="wechat-dialog-text wechat-dialog-voice">
+											<span>1"</span><i></i>
+										</div>
+										<a class="a-wechat-dialog-del" href="javascript:;" title="删除对话">X</a>
+									</div>
+									<div class="wechat-dialog el-remove">
+										<div class="wechat-dialog-face">
+											<img src="static/app/images/user-face.png" />
+										</div>
+										<div class="wechat-dialog-text wechat-dialog-voice">
+											<i></i><span>1"</span><em></em>
+										</div>
+										<a class="a-wechat-dialog-del" href="javascript:;" title="删除对话">X</a>
+									</div>
+									<div class="wechat-dialog wechat-dialog-right el-remove">
+										<div class="wechat-dialog-face">
+											<img src="static/app/images/user-face.png" />
+										</div>
+										<div class="wechat-dialog-text wechat-dialog-image"><img
+												src="static/app/images/dialog-demo1.jpeg"></div>
+										<a class="a-wechat-dialog-del" href="javascript:;" title="删除对话">X</a>
+									</div>
+									<div class="wechat-dialog wechat-dialog-right el-remove">
+										<div class="wechat-dialog-face">
+											<img src="static/app/images/user-face.png" />
+										</div>
+										<div class="wechat-dialog-text">
+											hellohelhellohellohellohellohellohellolohello</div>
+										<a class="a-wechat-dialog-del" href="javascript:;" title="删除对话">X</a>
+									</div>
+									
+
+									<div class="wechat-dialog el-remove">
+										<div class="wechat-dialog-face">
+											<img src="static/app/images/user-face.png" />
+										</div>
+										<div class="wechat-dialog-text wechat-dialog-trans">
+											<div class="wechat-dialog-trans-content wechat-dialog-redp-content">
+												<i></i>
+												<div>
+													<span>恭喜发财，大吉大利</span>
+												</div>
+											</div>
+											<div class="wechat-dialog-trans-bottom">
+												<span>微信红包</span>
+											</div>
+										</div>
+										<a class="a-wechat-dialog-del" href="javascript:;" title="删除对话">X</a>
+									</div>
+
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
