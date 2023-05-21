@@ -5324,7 +5324,7 @@
 				date_min: ""
 			},
 			users: [
-{id:"user-1",name:"开拓者",image:"./static/app/images/sculpture/DM_20230502164931_002.PNG",is_me: !0,selected: !0},
+{id:"user-1",name:"开拓者",image:"https://raw.githubusercontent.com/mzmyyds/imgs/main/img/29e742235cc04f19b2ff83135ddd2317",is_me: !0,selected: !0},
 {id:"user-2",name:"三月七",image:"./static/app/images/sculpture/DM_20230502164931_019.PNG",is_me: 0},
 {id:"user-3",name:"丹恒",image:"./static/app/images/sculpture/DM_20230502164931_007.PNG"},
 {id:"user-4",name:"姬子",image:"./static/app/images/sculpture/DM_20230502164931_008.PNG"},
