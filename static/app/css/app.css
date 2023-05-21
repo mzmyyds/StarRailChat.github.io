@@ -2,7 +2,8 @@
 body,
 html {
     height: 100%;
-    font-family: 'SF Pro', 'PingFang SC'
+    font-family: 'SF Pro', 'PingFang SC';
+	overflow: hidden;
 }
 
 a:active,
@@ -52,12 +53,47 @@ a:hover {
     font-weight: 400;
     src: url(../fonts/SansStdBold.ttf)
 }
-
+ .fullscreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgb(139, 187, 233);
+	  z-index: 999;
+    }
+.fullscreen h1{
+	top: 50%;
+	left: 50%;
+	color: ghostwhite;
+	position: fixed;
+}
+.tab-col i{
+	 cursor: pointer;
+}
 .wrapper {
     position: relative;
     height: 100%
 }
-
+.homecontain {
+    border: var(--border-in-light);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    color: var(--black);
+    background-color: var(--white);
+    min-width: 600px;
+    min-height: 480px;
+    max-width: 900px;
+    display: flex;
+    overflow: hidden;
+    box-sizing: border-box;
+    width: var(--window-width);
+    height: var(--window-height);
+    background-color: aliceblue;
+    position: inherit;
+    margin-left: 20%;
+	margin-bottom: 20%;
+	}
 li,
 ul {
     list-style: none;
@@ -1405,17 +1441,43 @@ fieldset[disabled] .radio-custom label {
 
 .tab {
     flex: 1;
-    margin-right: 20px
+    margin-right: 20px;
+	max-width: 375px;
+	position: relative;
 }
-
+.save_img{
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				opacity: 0;
+				z-index: 8;/*根据具体情况改数值*/
+			}
+.tab-col{
+		display: flex;
+	    flex-direction: column-reverse;
+	    width: 50px;
+	    border-right: 1px solid white;
+	    background-color: #cbe4fd;
+		padding: 10px;
+	    text-align: center;
+	    align-items: center;
+}
+.tab-col i{
+	margin-top: 10px;
+}
 .tab-content {
     flex: 1
 }
-
-.phone-wrap {
+.tabUnder{
+	  bottom: 0px;
+	  width: 100%;
+	  height: 115px;
+	  position: absolute;
+	  bottom: 0px;
+}
+.phone-wrap1 {
         width: 292.5px;
-        height: 633.36px;
-        margin-right: 200px;
+        height: 750px;
 }
 .phone-content {
     transform: scale(.33333333);
@@ -1740,13 +1802,40 @@ width: 850px;
 .phone-body {
     position: absolute;
     top: 264px;
-    bottom: 269px;
+    bottom: 115px;
     left: 0;
     right: 0;
     -webkit-overflow-scrolling: touch;
     overflow-y: scroll
 }
 
+.dialog-header{
+	    position: inherit;
+	    /* text-align: center; */
+	    width: 80%;
+	    height: 20%;
+	    left: 10%;
+	    padding-right: 10px;
+	    /* border-bottom: 1px; */
+	    border-bottom: 1px solid #757575;
+}
+.dialog-body{
+	    height: 300px;
+}
+.confirmButton{
+	display: inline-block;
+	  border: none;
+	  border-radius: 120px;
+	  padding: 10px 30px;
+	  font-size: 18px;
+	  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+	  transition: background-color 0.3s ease-in-out;
+	  cursor: pointer;
+	  outline: none;
+}
+.confirmButton:hover {
+  background-color: gainsboro;
+}
 .wechat-content {
     padding: 36px
 }
@@ -1798,7 +1887,7 @@ width: 850px;
 .wechat-dialog-text {
             background: white;
             padding: 28px 38px;
-            font-size: 60px;
+            font-size: 2em;
             border-radius: 15px;
             margin-right: 180px;
             word-break: break-all;
@@ -1870,27 +1959,18 @@ width: 850px;
 }
 
 .a-wechat-dialog-menu {
-    display: flex;
     position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 96%;
+	top:100%;
     border-radius: 15px;
-    background: #263238;
-    top: -84px;
     display: none
 }
-
-.a-wechat-dialog-menu:after {
-    content: '';
-    width: 30px;
-    height: 30px;
-    background: #263238;
+.a-wechat-dialog-trash {
     position: absolute;
-    transform: rotate(45deg) translateX(-50%);
-    border-radius: 6px;
-    left: 50%;
-    margin-left: -5px;
-    bottom: -20px
+    left: 96%;
+	top:15%;
+    border-radius: 15px;
+    
 }
 
 .a-wechat-dialog-menu a {
@@ -2058,7 +2138,6 @@ width: 850px;
 
 .wechat-dialog-image img {
         min-width: 450px;
-        background-color: white;
 }
 
 .wechat-dialog-image:after {
@@ -2105,7 +2184,15 @@ width: 850px;
 }
 
 .dialog-user {
-    padding: 20px 5px
+    padding: 20px 5px;
+        height: 630px;
+        /* overflow: hidden; */
+        overflow-y: scroll;
+        height: calc(100vh vh - 50px);
+}
+.dialog-user::-webkit-scrollbar {/*滚动条整体样式*/
+  -webkit-appearance: none;
+  width: 1px;
 }
 
 .dialog-user-items {
@@ -2124,8 +2211,8 @@ width: 850px;
 .dialog-user-item-add,
 .dialog-user-item-add:active,
 .dialog-user-item-add:focus {
-    width: 98px;
-    height: 98px;
+    width: 60px;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2150,9 +2237,7 @@ width: 850px;
 .dialog-user-face i {
     width: 60px;
     height: 60px;
-    background: #eee;
     display: block;
-    background: url(../images/logo.png);
     background-size: cover;
     background-position: center
 }
@@ -2161,6 +2246,153 @@ width: 850px;
     position: relative
 }
 
+.detailmodify {
+  width: 300px;
+  height: 100px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  background-color: #eeeeef;
+  -webkit-box-shadow: #666 0px 0px 10px;
+  border-radius: 10px;
+}
+.edit-dialog{
+	    font-family: 'Roboto';
+	    width: 1300px;
+	    /* height: 800px; */
+	    margin: 30px auto 0;
+		flex-direction: column;
+	    top: 50%;
+	    position: fixed;
+	    display: block;
+	    background-color: #d5d6e0;
+	    background-size: cover;
+	    z-index: 5;
+	    border-radius: 50px 55px 50px 50px;
+	    transform: translate(5%, -50%);
+}
+.putContain{
+	width: 1700px;
+	display: flex;
+	align-items: flex-end;
+	    border-radius: 60px;
+	    border: 1px solid #dedede;
+	    box-shadow: 0 -2px 5px rgba(0,0,0,.03);
+	    background-color: white;
+		margin: 18px 0;
+		z-index: 90;
+}
+.putContain-right{
+		height: 366px;
+		display: flex;
+		flex-direction: column-reverse;
+	    padding: 0px;
+	    margin: 0px;
+		text-align: center;
+}
+.typeinput{
+		    width: 1500px;
+		    height: 350px;
+		    margin: 20px;
+		    border-radius: 60px;
+		    border: 0px;
+		    box-shadow: 0 -2px 5px rgba(0,0,0,.03);
+		    background-color: white;
+		    color: black;
+		    font-family: inherit;
+		    padding: 10px 90px 10px 14px;
+		    resize: none;
+		    outline: none;
+		    font-size: 70px;
+			writing-mode: horizontal-tb !important;
+}
+
+.typeinputBT{
+	     background-color: #1d93ab;
+	         color: #fff;
+	         right: 30px;
+	         bottom: 32px;
+	         position: relative;
+	         cursor: pointer;
+	         height: 80px;
+	         width: 200px;
+	         font-size: 50px;
+	         border-radius: 27px;
+			 margin-top: 40px;
+}
+.emoji{
+	margin-bottom: 30px;
+}
+.edit-phone-dialog-title{
+	color:#999; 
+	  font-size:60px;
+	  font-weight:normal;
+	  position:absolute;
+	  pointer-events:none;
+	  left:5%;
+	  top:15%;
+	  transition:0.2s ease all; 
+	  -moz-transition:0.2s ease all; 
+	  -webkit-transition:0.2s ease all;
+}
+.confirmButtonDiv{
+		width: 100%;
+	    background-color: #2a2a2a;
+		padding: 10px;
+		border-radius: 0px 0px 50px 50px;
+}
+.edit-phone-dialog-text{
+	        width: 80%;
+	        height: 60%;
+	        margin-left: 5%;
+	        margin-bottom: 5%;
+			margin-top: 5%;
+	        outline: 0;
+			border-bottom: 2px solid #666464;
+	        /* font-size: 18px; */
+	        padding: 10px 10px 10px 5px;
+	        display: block;
+	        border: none;
+			background-color: transparent;
+}
+.edit-phone-dialog-text2{
+	     width: 80%;
+	     height: 10%;
+	     margin-left: 5%;
+	     margin-bottom: 5%;
+	     outline: 0;
+	     font-size: 18px;
+	     padding: 10px 10px 10px 5px;
+	     display: block;
+	     border: none;
+	     border-bottom: 2px solid #666464;
+	     background-color: transparent;
+	     margin-top: 5%;
+}
+.dialog-edit-title{
+	    font-size: 60px;
+	    color: #363636;
+}
+.phone-nav-more-title{
+	float: left;
+	    background: none;
+	    display: inline-block;
+	    text-indent: 3px;
+	    margin-left: 8%;
+	    /* vertical-align: baseline; */
+	    /* vertical-align: bottom; */
+	    /* padding-bottom: 0; */
+	    font-size: 50px;
+	    color: rgba(0, 0, 0, 0.6);
+	    font-family: Roboto, Helvetica, Arial, sans-serif;
+	    font-weight: 400;
+	    /* font-size: 1rem; */
+	    /* line-height: 1.4375em; */
+	    top: 20px;
+	    padding-top: 5%;
+}
 .dialog-user-face input[type=text] {
         width: 244px;
         padding-left: 20px;
@@ -2213,16 +2445,16 @@ width: 850px;
 .dialog-user-delete,
 .dialog-user-delete:hover {
     position: absolute;
-    width: 20px;
-    height: 20px;
-    background: red;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    right: 0;
-    top: -10px
+        /* width: 20px; */
+        /* height: 20px; */
+        /* background: red; */
+        /* border-radius: 10px; */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /* color: #fff; */
+        right: -10%;
+        
 }
 
 .dialog-user-select {
@@ -2254,7 +2486,6 @@ width: 850px;
 
 .dialog-user-content-title {
     font-size: 14px;
-    padding-top: 20px
 }
 
 .dialog-user-content-bar {
@@ -2390,6 +2621,23 @@ a.a-phone-set-bg span {
     background: rgba(0, 0, 0, .6);
     opacity: 1
 }
+
+.popup-container {
+  position: fixed;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  width: 370px; /* 设置宽度为 3*100px */
+  height: 370px; /* 设置高度为 5*100px */
+  overflow-y: scroll;
+}
+
+.popup-container img {
+  max-width: 100px;
+  margin: 10px;
+}
+
 
 @media screen and (max-width:1024px) {
     .edit-content {

@@ -2,9 +2,8 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>在线微信对话生成器</title>
-	<meta name="keywords" content="免费在线微信对话生成器" />
-	<meta name="description" content="在线微信对话生成器是一款在线微信聊天对话制作的工具" />
+	<title>StarChat</title>
+	<meta name="keywords" content="星穹铁道对话生成器" />
 	<meta name="render" content="webkit">
 	<link rel="icon" href="favicon.png">
 	<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
@@ -18,57 +17,60 @@
 	<link rel="stylesheet" href="static/app/css/zui.min.css">
 	<link rel="stylesheet" href="static/app/css/app.css">
 	<link rel="stylesheet" href="static/app/css/wallet.css">
+	<link rel="stylesheet" href="static/app/font-awesome-4.7.0/css/font-awesome.min.css"/>
 	<script type="text/javascript" src="static/app/js/common.bundle.js"></script>
 	<script type="text/javascript" src="static/app/js/chat.bundle.js"></script>
+	<script type="text/javascript" src="static/app/js/html2canvas.js"></script>
+	<script type="text/javascript" src="static/app/js/load.js"></script>
 </head>
 <body>
 	<div id="vueApp" class="wrapper">
-		<div class="container-fluid page-content">
-			<div id="pageHeader">微信对话生成器</div>
-			<div class="edit-content">
+		<div id="fullscreen" class="fullscreen" style="display: none;">
+		    <h1>加载中...</h1>
+		</div>
+		<div class="container-fluid page-content"  @click="closeDetail">
+			<div id="pageHeader">StarChat聊天生成器</div>
+			<div class="homecontain">
+				<div class="tab-col">
+					<i class="fa fa-cog fa-3x" data-tab href="#tabContent1" title="设置"></i>
+					<i class="fa fa-trash fa-3x" @click="cleanDialogs" title="清空当前对话"></i>
+					<i class="fa fa-camera fa-2x" @click="saveImage" title="长截屏"></i>
+					<i class="fa fa-group fa-2x" data-tab href="#tabContent2" title="人物选择"></i>
+				</div>
 				<div class="tab">
-					<ul class="nav nav-tabs">
-						<li class="active"><a data-tab href="#tabContent1">外观设置</a></li>
-						<li><a data-tab href="#tabContent2">对话设置</a></li>
-					</ul>
 					<div class="tab-content">
-						<div class="tab-pane active" id="tabContent1">
-							<!-- 外观设置 -->
+						<div class="tab-pane" id="tabContent1">
+							<!-- 设置 -->
 							<div class="view-setting">
 								
 								<div class="view-set-item">
-									<span>消息数目：</span>
-									<input type="text" name="phone-msg-count" class="form-control" v-model.number="setting.message">
+									<span>副标题：</span>
+									<input type="text" name="phone-msg-count" class="form-control" v-model="setting.message">
 								</div>
 								<div class="view-set-item">
 									<span>聊天标题：</span>
 									<input type="text" class="form-control" v-model="setting.title">
 								</div>
-								<div class="view-set-item">
-									<span>语音模式：</span>
-									<label class="my-radio"><input type="radio" name="phone-voice" v-model="setting.voice" value="1"> 是</label>
-									<label class="my-radio"><input type="radio" name="phone-voice" v-model="setting.voice" value="0" checked> 否</label>
-								</div>
-								<div class="view-set-item">
-									<span>聊天背景：</span>
-									<a class="a-phone-set-bg" href="javascript:;" title="选择背景图">
-										<font>+</font>
-										<img class="img-phone-set-bg" :src="setting.background" />
-										<input @change="setBackground($event)" type="file" />
-										<span @click="deleteBackground" v-if="setting.background != ''">x</span>
-									</a>
+								
+								<button @click="disDelet" class="btn btn-danger">开启快速删除</button>
+								<button @click="reload" class="btn btn-danger">清理缓存</button>
+								<div class="aboutme">
+									<h2>历史版本</h2>
+									<p>v1.0 (2023-05-21)</p>
+									<p>发布首次版本</p>
+									<h2>署名和版权</h2>
+									<p>这个项目的灵感来自Yuzutalk以及closuretalk</p>
+									<p>项目改自https://github.com/JokerXins/wxsc的微信对话生成器</p>
+									<p>角色版权属于mihoyo所有</p>
 								</div>
 							</div>
 						</div>
 						<!-- 对话设置 -->
-						<div class="tab-pane" id="tabContent2">
-							<div class="dialog-user">
-								<div class="dialog-user-title">编辑和选择用户（<font>第一个用户默认是自己</font>）</div>
+						<div class="tab-pane active" id="tabContent2">
+							<div class="dialog-user" id="dialog-user">
+								<div class="dialog-user-title">编辑和选择用户</div>
 								<div class="dialog-user-items">
-							
-									
 
-									
 									<div v-for="(user, index) in users" class="dialog-user-item">
 										<div class="dialog-user-face">
 											<a class="dialog-user-face-a" href="javascript:;">
@@ -76,57 +78,80 @@
 													placeholder="点击更换头像">
 												<i :style="'background-image: url(' + user.image + ')'"></i>
 											</a>
-											<input type="text" v-model="user.name" />
+											<input type="text"  v-model="user.name" disabled/>
 											<a @click="selectUser(index)"
 												:class="['dialog-user-select', {'dialog-user-selected':user.selected}]">选择用户</a>
 											<a v-if="!user.is_me" @click="delUser(index)" class="dialog-user-delete"
-												title="删除用户">x</a>
+												title="删除用户">删除</a>
+												<a @click="DetailModify(index)" @click.stop class="dialog-user-delete" style="margin-top: 10%;"
+													title="修改详情">详情</a>
 										</div>
+										
+										 <div v-if="user.isDetailShow" :key="index" class="detailmodify" style="background-color: #f1f1f1;">
+											 	<div class="phone-nav-more" style="background-size: 30%;height: 30px;margin-left: 88%;" @click="closeDetail2()">退出</div>
+										     <input type="text" class="edit-phone-dialog-text2" v-model="user.name">
+										 </div>
 									</div>
+									
+									 
 									<div class="dialog-user-item">
 										<a @click="addUser" class="dialog-user-item-add" href="javascript:;"
 											title="添加用户">+</a>
 									</div>
 								</div>
 
-								<div class="dialog-user-content-title">发送人：{{getSender()}}</div>
-								<div class="dialog-user-content">
-									<div class="dialog-user-content-panel">
-										<textarea v-model="setting.dialog_content"
-											class="edit-dialog-text form-control"></textarea>
-									</div>
-									<div class="view-setting view-setting2">
-										
-										<div class="view-set-item">
-											<span>事件：</span>
-											<input v-model="setting.dialog_repacket_remark" type="text"
-												class="form-control">
-										</div>
-									</div>
-									<div class="btn-groups">
-										<div class="btn-group">
-											<button @click="addTextDialog" class="btn btn-success">添加文字对话</button>
-											<button class="btn btn-primary btn-send-image">添加图片对话<input
-													@change="addImageDialog($event)" type="file"></button>
 
-										</div>
-										<div class="btn-group">
-											<button @click="addRedpacketDialog" class="btn btn-primary">添加红包对话</button>
-										</div>
-									</div>
-									<button class="btn-clear" @click="cleanDialogs" href="javascript:;">清空聊天内容</button>
-								</div>
 							</div>
 						</div>
 					</div>
+					<!-- tab下方-->
+					<div class="tabUnder"> 
+					
+						<div class="dialog-user-content-title">发送人：{{getSender()}} <i style="float: right; padding-right: 20%;">当前聊天位置:{{Isisme()}}</i></div>
+						<div style="display: flex;width: 500px;">
+						<select v-model="setting.notice_type" class="form-control"
+							style="width: 110px;padding: 0;">
+							<option value="Isdelete">朋友验证信息</option>
+							<option value="Offline">下线信息</option>
+							<option value="Online">上线信息</option>
+							<option value="Custom">自定义信息</option>
+						</select>
+						<input class="form-control" v-if="setting.notice_type === 'Custom'" style="min-height: 32px;width: 179px;" v-model="setting.dialog_notice" placeholder="输入自定义信息"/>
+						<input v-if="setting.notice_type !== 'Custom'" style="min-height: 32px;" placeholder="" disabled/>
+							<button @click="addNoticeDialog" class="btn btn-primary" style="width: 90px;padding: 0;">添加系统提示</button>
+						</div>
+						
+						<label>
+						  <input type="checkbox" v-model="setting.dialog_isme" value="1">启用右侧输入
+						</label>
+						
+					</div>
 				</div>
 				<!-- phone -->
-				<div class="phone-wrap">
+				<div id="phone-wrap1" class="phone-wrap1">
 					<div class="phone-content">
-						<div id="phone" class="phone1" style="width: 1750px;height: 2436px;">
+						<div id="phone" class="phone1" style="">
+							<!-- 编辑标题框-->
+							<div id="edit-title" class="edit-dialog" style=" display: none; text-align: center;">
+								<div class="dialog-header">
+									<span class="dialog-edit-title">聊天信息</span>
+								</div>
+								<div class="dialog-body" style="height: 650px;    padding-top: 8%;">
+									<input type="text" style="min-height: 32px;font-size: 60px;margin-left: 10%;" placeholder="标题"
+									v-model="setting.title" class="edit-phone-dialog-text2">
+									<input type="text" style="min-height: 32px;font-size: 60px;margin-left: 10%;" placeholder="副标题"
+									v-model="setting.message" class="edit-phone-dialog-text2">
+								</div>
+								<div class="confirmButtonDiv">
+								<button class="confirmButton" style="width: 30%;height: 20%; font-size: 200%;margin-right:100px;" @click="closeEditDiv('#edit-title')">确定</button>
+								<button class="confirmButton" style="width: 30%;height: 20%; font-size: 200%;" @click="closeEditDiv('#edit-title')">取消</button>
+								<a id="dialogDelete(index)" style="font-size: 40px;color: wheat;">删除</a>
+								</div>
+							</div>
+							
 							<div class="phone-top">
 								<div class="phone-nav">
-									<div class="phone-nav-left">
+									<div class="phone-nav-left" @click="openTitleEdit()" title="编辑标题">
 										<span class="phone-top-title">
 											{{setting.title}}
 										</span>
@@ -137,7 +162,7 @@
 									<div class="phone-nav-center">
 									</div>
 									<div class="phone-nav-right">
-										<div class="phone-nav-more">更多</div>
+										<div class="phone-nav-more">退出</div>
 									</div>
 								</div>
 							</div>
@@ -148,10 +173,27 @@
 
 							<div class="phone-water"></div>
 
-							<div class="phone-body">
-								<div class="wechat-content">
+							<div id="phone-body" class="phone-body">
+								<div class="wechat-content" id="wechat-content">
+									
+									<div id="edit-dialog" class="edit-dialog" style=" display: none; text-align: center;">
+										<div class="dialog-header">
+											<span class="dialog-edit-title">编辑框</span>
+										</div>
+										<div class="dialog-body">
+										<input  v-model="setting.edit_dialog_content" style="min-height: 32px;font-size: 60px;" placeholder="编辑内容"
+											class="edit-phone-dialog-text"/>
+										</div>
+										<div class="confirmButtonDiv">
+										<button class="confirmButton" style="width: 30%;height: 20%; font-size: 200%;margin-right:100px;" @click="confirmEdit('#edit-dialog')">确定</button>
+										<button class="confirmButton" style="width: 30%;height: 20%; font-size: 200%;" @click="closeEditDiv('#edit-dialog')">取消</button>
+										<a id="dialogDelete" style="font-size: 40px;color: wheat;">删除</a>
+										</div>
+									</div>
+									
 									<template v-for="(dialog, index) in dialogs">
-										<div :class="['wechat-dialog', {'wechat-dialog-right':dialog.is_me}]">
+										<div :class="['wechat-dialog', {'wechat-dialog-right':dialog.is_me}]"
+											 :style="dialog.type === 'notice' ? { 'margin-bottom': '5em' } : {}">
 											<div v-if="dialog.type != 'notice'" class="wechat-dialog-face">
 												<img :src="getUserById(dialog.user_id).image" />
 											</div>
@@ -164,29 +206,19 @@
 											<template v-if="dialog.type == 'image'">
 												<div class="wechat-dialog-name">{{dialog.name}}</div>
 												<div
-													:class="['wechat-dialog-text', 'wechat-dialog-image', {'wechat-dialog-image-noborder':setting.background != ''}]">
+													:class="['wechat-dialog-text', 'wechat-dialog-image', {'wechat-dialog-image-noborder':setting.background != ''}]"
+													style="background-color: transparent;border:none">
 													<img :src="dialog.image">
-												</div>
-											</template>
-
-											<template v-if="dialog.type == 'voice'">
-												<div class="wechat-dialog-text wechat-dialog-voice">
-													<div v-if="dialog.is_me"
-														:style="{width: getVoiceLength(dialog.time) + 'px'}"></div>
-													<span v-if="dialog.is_me">{{dialog.time}}"</span>
-													<i></i>
-													<span v-if="!dialog.is_me">{{dialog.time}}"</span>
-													<div v-if="!dialog.is_me"
-														:style="{width: getVoiceLength(dialog.time) + 'px'}"></div>
-													<em v-if="!dialog.is_me && dialog.isread == '0'"></em>
-												</div>
+												</div>	
 											</template>
 
 											<template v-if="dialog.type == 'notice'">
-												<div class="wechat-dialog-notice">
+												<div class="wechat-dialog-notice" style="display: flex;align-items: center;">
+													<span style="width: 2.2em;height: 2em; background-image: url(static/app/images/noticIcon.png);background-size: cover;
+													margin-right: 1em;"></span>
 													<span
 														:class="[{'wechat-dialog-notice-has-bg':setting.background != ''},{'wechat-dialog-notice-system':dialog.is_system}]"
-														v-html="dialog.content"></span>
+														v-html="dialog.content" style="max-width: 35em;font-size: 1.03em;"></span>
 												</div>
 											</template>
 
@@ -215,9 +247,11 @@
 												</div>
 											</template>
 
-											<a @click="deleteDialog(index)" class="a-wechat-dialog-del"
-												href="javascript:;" title="删除对话">X</a>
-
+											<a @click="editDialog(index)" class="a-wechat-dialog-menu"
+												href="javascript:;" title="编辑内容"><i class="fa fa-edit fa-2x"></i></a>
+											<a @click="quickdeleteDialog(index)" class="a-wechat-dialog-trash" style="display: none;"
+												href="javascript:;" title="删除"><i class="fa fa-trash-o fa-2x"></i></a>
+											
 											<div v-if="!dialog.is_get && dialog.type == 'redpacket'"
 												class="a-wechat-dialog-menu">
 												<a @click="redpacketGet(index)">领取</a>
@@ -229,71 +263,24 @@
 										</div>
 									</template>
 
-									<div class="wechat-dialog el-remove">
-										<div class="wechat-dialog-notice">
-											<span class="wechat-dialog-notice-has-bg">2019年5月20日 下午4:20</span>
-										</div>
-										<a class="a-wechat-dialog-del" href="javascript:;" title="删除对话">X</a>
-									</div>
-									<div class="wechat-dialog wechat-dialog-right el-remove">
-										<div class="wechat-dialog-face">
-											<img src="static/app/images/user-face.png" />
-										</div>
-										<div class="wechat-dialog-text wechat-dialog-voice">
-											<span>1"</span><i></i>
-										</div>
-										<a class="a-wechat-dialog-del" href="javascript:;" title="删除对话">X</a>
-									</div>
-									<div class="wechat-dialog el-remove">
-										<div class="wechat-dialog-face">
-											<img src="static/app/images/user-face.png" />
-										</div>
-										<div class="wechat-dialog-text wechat-dialog-voice">
-											<i></i><span>1"</span><em></em>
-										</div>
-										<a class="a-wechat-dialog-del" href="javascript:;" title="删除对话">X</a>
-									</div>
-									<div class="wechat-dialog wechat-dialog-right el-remove">
-										<div class="wechat-dialog-face">
-											<img src="static/app/images/user-face.png" />
-										</div>
-										<div class="wechat-dialog-text wechat-dialog-image"><img
-												src="static/app/images/dialog-demo1.jpeg"></div>
-										<a class="a-wechat-dialog-del" href="javascript:;" title="删除对话">X</a>
-									</div>
-									<div class="wechat-dialog wechat-dialog-right el-remove">
-										<div class="wechat-dialog-face">
-											<img src="static/app/images/user-face.png" />
-										</div>
-										<div class="wechat-dialog-text">
-											hellohelhellohellohellohellohellohellolohello</div>
-										<a class="a-wechat-dialog-del" href="javascript:;" title="删除对话">X</a>
-									</div>
-									
-
-									<div class="wechat-dialog el-remove">
-										<div class="wechat-dialog-face">
-											<img src="static/app/images/user-face.png" />
-										</div>
-										<div class="wechat-dialog-text wechat-dialog-trans">
-											<div class="wechat-dialog-trans-content wechat-dialog-redp-content">
-												<i></i>
-												<div>
-													<span>恭喜发财，大吉大利</span>
-												</div>
-											</div>
-											<div class="wechat-dialog-trans-bottom">
-												<span>微信红包</span>
-											</div>
-										</div>
-										<a class="a-wechat-dialog-del" href="javascript:;" title="删除对话">X</a>
-									</div>
-
 								</div>
 							</div>
 
 						</div>
+						<div class="putContain">
+							<textarea class="typeinput" v-model="setting.dialog_content" placeholder="点此输入文字"></textarea>
+							<div class="putContain-right">
+								
+								<button class="typeinputBT" @click="addTextDialog">发送</button>
+								<button class="btn btn-send-image" style="color: unset;background-color: unset;outline: unset;border: unset;" title="发送图片">
+									<input @change="addImageDialog($event)" type="file">
+								<i class="fa fa-picture-o emoji" style="font-size: 6em;" title="发送图片"></i>
+								</button>
+								<i class="fa fa-smile-o emoji" @click="addEmojiDialog"  @click.stop style="font-size: 7em;cursor:pointer;" title="发送emoji"></i>
+							</div>
+						</div>
 					</div>
+					
 				</div>
 			</div>
 		</div>

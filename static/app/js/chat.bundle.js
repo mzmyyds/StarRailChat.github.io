@@ -5291,6 +5291,7 @@
 		n = (t = t) && t.__esModule ? t : {
 			default: t
 		};
+	var editIndex;
 	A.exports = {
 		mounted: function() {
 			var A = new Date,
@@ -5304,13 +5305,13 @@
 		},
 		data: {
 			setting: {
-				message: 1,
-				title: "微信对话",
-				dialog_content: "你好",
+				message: "" ,
+				title: "星穹铁道一家人",
+				dialog_content: "",
 				dialog_money: 88,
 				dialog_voice: 2,
 				dialog_voice_isread: 1,
-				dialog_repacket_remark: "恭喜发财，大吉大利",
+				dialog_repacket_remark: "",
 				dialog_trans_remark: "",
 				voice: 0,
 				background: "",
@@ -5322,100 +5323,208 @@
 				date_hour: "",
 				date_min: ""
 			},
-			users: [{
-				id: "user-1",
-				name: "微信对话",
-				image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAIAAAD2HxkiAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyNpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTQwIDc5LjE2MDQ1MSwgMjAxNy8wNS8wNi0wMTowODoyMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChNYWNpbnRvc2gpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkFFNjgxN0VBRkE1NTExRUFCNjUwQTEzMEE4ODE1MDNGIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkFFNjgxN0VCRkE1NTExRUFCNjUwQTEzMEE4ODE1MDNGIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6Q0REQTMxRUZGOTRBMTFFQUI2NTBBMTMwQTg4MTUwM0YiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6Q0REQTMxRjBGOTRBMTFFQUI2NTBBMTMwQTg4MTUwM0YiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7JDGwgAAAeMElEQVR42uydB3gU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",
-				is_me: !0,
-				selected: !0
-			}, {id: "user-2",name:"三月七",image:"https://s1.vika.cn/space/2023/05/02/c2656628a5834d2bb5f82fc7b97485cf"},
-{id: "user-3",name:"丹恒",image:"https://s1.vika.cn/space/2023/05/02/05edfce2189c43bfa4321860f934d1d8"},
-{id: "user-4",name:"姬子",image:"https://s1.vika.cn/space/2023/05/02/bfceb505a6984742918ec9828a160b4b"},
-{id: "user-5",name:"瓦尔特",image:"https://s1.vika.cn/space/2023/05/02/a3f5fec7042645aa85191d620f64c897"},
-{id: "user-6",name:"阿兰",image:"https://s1.vika.cn/space/2023/05/02/7ba165f67fd74f7d97d30513cf371322"},
-{id: "user-7",name:"艾丝妲",image:"https://s1.vika.cn/space/2023/05/02/553171de32c34cd5b00785e58c43b5d8"},
-{id: "user-8",name:"黑塔",image:"https://s1.vika.cn/space/2023/05/02/cc30e9492d544da78440091379415913"},
-{id: "user-9",name:"布洛妮娅",image:"https://s1.vika.cn/space/2023/05/02/4117f5048d5044238a852f6202819a88"},
-{id: "user-10",name:"希儿",image:"https://s1.vika.cn/space/2023/05/02/cc2eb327a8c544c6ab4f6fdb1ed33923"},
-{id: "user-11",name:"希露瓦",image:"https://s1.vika.cn/space/2023/05/02/46c2270323774fce86c134aaf4bb98f7"},
-{id: "user-12",name:"杰帕德",image:"https://s1.vika.cn/space/2023/05/02/55c1b10224c44462ba4334669192ff9f"},
-{id: "user-13",name:"娜塔莎",image:"https://s1.vika.cn/space/2023/05/02/44ab692fb3f44ce28ba3bbc16d722430"},
-{id: "user-14",name:"佩拉",image:"https://s1.vika.cn/space/2023/05/02/29ed789717a848a6911a7a3abc99b883"},
-{id: "user-15",name:"克拉拉",image:"https://s1.vika.cn/space/2023/05/02/ca7e2ee2fb0c49fdaf8f3051b9bc40af"},
-{id: "user-16",name:"桑博",image:"https://s1.vika.cn/space/2023/05/02/88c93c7709ab4de3a2fdd1ee08663e29"},
-{id: "user-17",name:"虎克",image:"https://s1.vika.cn/space/2023/05/02/e4398771cea54f158d7d7adfc6f6efd5"},
-{id: "user-18",name:"青雀",image:"https://s1.vika.cn/space/2023/05/02/fdde490dfdb64df9a73c63f946c0a564"},
-{id: "user-19",name:"停云",image:"https://s1.vika.cn/space/2023/05/02/4b13c55ee5db4732b33bb00148db281c"},
-{id: "user-20",name:"景元",image:"https://s1.vika.cn/space/2023/05/02/d07e7b0b53244feb949ef542886eccb2"},
-{id: "user-21",name:"素裳",image:"https://s1.vika.cn/space/2023/05/02/9b762030e0974b7fb33e3048644d5699"},
-{id: "user-22",name:"彦卿",image:"https://s1.vika.cn/space/2023/05/02/95b2d7aba32246a9afaa833e36e74eb5"},
-{id: "user-23",name:"白露",image:"https://s1.vika.cn/space/2023/05/02/496554fbd1ca431bbce46f541f218d92"}
+			users: [
+{id:"user-1",name:"开拓者",image:"./static/app/images/sculpture/DM_20230502164931_002.PNG",is_me: !0,selected: !0},
+{id:"user-2",name:"三月七",image:"./static/app/images/sculpture/DM_20230502164931_019.PNG",is_me: 0},
+{id:"user-3",name:"丹恒",image:"./static/app/images/sculpture/DM_20230502164931_007.PNG"},
+{id:"user-4",name:"姬子",image:"./static/app/images/sculpture/DM_20230502164931_008.PNG"},
+{id:"user-5",name:"瓦尔特",image:"./static/app/images/sculpture/DM_20230502164931_022.PNG"},
+{id:"user-6",name:"阿兰",image:"./static/app/images/sculpture/DM_20230502164931_014.PNG"},
+{id:"user-7",name:"艾丝妲",image:"./static/app/images/sculpture/DM_20230502164931_010.PNG"},
+{id:"user-8",name:"黑塔",image:"./static/app/images/sculpture/DM_20230502164931_020.PNG"},
+{id:"user-9",name:"布洛妮娅",image:"./static/app/images/sculpture/DM_20230502164931_005.PNG"},
+{id:"user-10",name:"希儿",image:"./static/app/images/sculpture/DM_20230502164931_023.PNG"},
+{id:"user-11",name:"希露瓦",image:"./static/app/images/sculpture/DM_20230502164931_015.PNG"},
+{id:"user-12",name:"杰帕德",image:"./static/app/images/sculpture/DM_20230502164931_018.PNG"},
+{id:"user-13",name:"娜塔莎",image:"./static/app/images/sculpture/DM_20230502164931_003.PNG"},
+{id:"user-14",name:"佩拉",image:"./static/app/images/sculpture/DM_20230502164931_021.PNG"},
+{id:"user-15",name:"克拉拉",image:"./static/app/images/sculpture/DM_20230502164931_001.PNG"},
+{id:"user-16",name:"桑博",image:"./static/app/images/sculpture/DM_20230502164931_006.PNG"},
+{id:"user-17",name:"虎克",image:"./static/app/images/sculpture/DM_20230502164931_011.PNG"},
+{id:"user-18",name:"青雀",image:"./static/app/images/sculpture/DM_20230502164931_024.PNG"},
+{id:"user-19",name:"停云",image:"./static/app/images/sculpture/DM_20230502164931_016.PNG"},
+{id:"user-20",name:"景元",image:"./static/app/images/sculpture/DM_20230502164931_013.PNG"},
+{id:"user-21",name:"素裳",image:"./static/app/images/sculpture/DM_20230502164931_004.PNG"},
+{id:"user-22",name:"彦卿",image:"./static/app/images/sculpture/DM_20230502164931_017.PNG"},
+{id:"user-23",name:"白露",image:"./static/app/images/sculpture/DM_20230502164931_012.PNG"},
+{id:"user-24",name:"符玄",image:"./static/app/images/sculpture/DM_20230502164931_025.PNG"},
+{id:"user-25",name:"刃",image:"./static/app/images/sculpture/DM_20230502164931_026.PNG"},
+{id:"user-26",name:"卡夫卡",image:"./static/app/images/sculpture/DM_20230502164931_027.PNG"},
+{id:"user-27",name:"罗刹",image:"./static/app/images/sculpture/DM_20230502164931_028.PNG"},
+{id:"user-28",name:"银狼",image:"./static/app/images/sculpture/DM_20230502164931_029.PNG"},
+
 
 			],
+			imgs: [
+			    'https://patchwiki.biligame.com/images/sr/thumb/5/51/58b4jaukfv6u38t7ma84og0rw5j7z52.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-04-16.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/c/c4/qnmm87t0nyz27oaiczjb4m04930v4qf.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-04-15.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/e/ea/jju22qteo94o1nnou0irycdovko02u5.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-04-12.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/a/a2/s6gu899c4qi8x7pk3n9ghm92829zr7n.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-04-11.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/6/6f/h7dvvonlni9g93b75l38wop1zzw9hhn.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-04-10.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/b/b4/02jxvvz7x9r5zarfhqhzx5ls9sik5xt.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-04-09.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/a/ae/qx2j02uvekb9o45zxbeifg0i1ytfts9.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-04-08.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/5/58/3g829dl2mebf6at8ehs1zi9gkoved3d.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-04-07.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/1/17/tuv4ydpcvp9qbstvl9wbvn8poqu5ro7.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-04-06.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/3/32/sigq3clb0yntd71zy2gl2d1b53h44ig.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-04-05.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/9/99/5t2dc32pu5dky6cy5yx1tsgt39g7xki.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-04-04.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/7/71/njmo6n7ok23mr8h1w95cly62ren66l3.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-04-03.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/0/0f/f16t3bk3ymjhnejl1nqjgrm56phak8f.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-04-02.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/5/5f/3f7bwuiho03vz9xv23dnnqllvojtdfb.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-04-01.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/0/0b/q97m8nitvabmcd20ukejgb6voc8qmvn.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-03-07.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/9/99/snuh6h73npwxdypoaqhvb15szn00hz4.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-01-06.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/d/da/44qmbc8ds2uo0y1o0dwh646ygjsq5gx.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-01-05.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/d/d1/jev0d0mxoixky2m7h5v2by79h0796k4.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-03-16.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/2/27/63c4004n7fpc19fuzc7xjzvhowi239u.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-03-15.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/f/f5/7fld91kf1gf6my5ou66aiuele7jhdhe.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-03-14.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/d/d8/fa7pk4t97u91jjdbg1vqh2gva2gkqne.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-03-13.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/1/1f/n2v00289xkr6771zmiwy0ubqgbsirtg.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-03-12.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/4/48/292dub585xperpb26ilil4jlt80pa3r.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-03-11.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/a/ab/3xhg07j47l4m1xl5vxzy3hzysc3jh5n.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-03-10.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/f/f3/gf0wsrmcbqhv16poczmaa4bwzaeqzvw.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-03-09.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/7/75/pvmdl34bfsis5yro66gnti8tv38oxkm.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-03-08.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/4/4e/khh3bzka0mbiafstz6faagjvhxhue42.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-03-06.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/9/97/ban32ufnxhwh73qs65mno68uan9czgp.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-03-05.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/1/1c/sbdxg5lifqz7sfhs98byzy19u1j1ffd.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-01-04.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/c/c4/qugk9bgq7mthccvrvxbl3oo362okrww.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-01-03.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/e/e0/iktfoe2az3hhx1vq7s2wittp2owdf4q.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-01-02.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/e/ee/83q126srotcse8aslyuax5l6w4eyewd.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-01-01.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/f/fa/azgdqk2u0ctztfoo3voftrebmq65z0z.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-03-04.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/4/47/sacpgzfntrsoko48p84or94p1kpig16.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-03-03.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/8/8b/rgaid2dio9bij7sgujh8wx8jbsp8k4v.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-03-02.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/5/50/gsnsirkl7od0v17qwf72t1mc9qaagsl.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-03-01.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/8/8e/3zd9hgp3uxqomd6vhp6v7xld2nr9lnd.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-02-16.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/6/69/l58clqx8g8z9z0a7ojmj6tdhplm6013.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-02-15.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/c/cb/avehmsy2cuevzy0zy3thqn61w775l2q.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-02-14.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/8/8e/04i4n3k9jdk17duu9eyi6r6y4hvp5y2.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-02-13.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/f/fe/psg0ribk9yd7urm524idsmao6yd7jcz.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-02-12.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/b/bd/t492sx5kw5zjhm96knn1bi75csx155j.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-02-11.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/c/cd/scqo4eh829pdujbfeuagm7kgmvhpa2p.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-02-10.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/0/0e/kz45sgwqoef6semir2dbhnr23c1xgad.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-02-09.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/2/29/bo7igntvelpqypqr9aa5iqzzxg46wd4.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-02-08.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/2/27/ix0ozi7c047bkvelvlliu2l9q2bks3i.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-02-07.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/7/78/7rjrq6ovan10jpm427zd9eldeyzwuu7.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-02-06.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/e/e6/c1ytvq6ft0k52t72ze10au42b74r7jh.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-02-05.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/e/e8/ilv9tfsn74shi9io1o25bcphfmyyulm.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-02-04.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/8/80/6eeyauxl1p450lyggpnbmilv7mkykxq.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-02-17.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/0/0d/3msm8t18dsdu8hfloacgnbqgut8wdc6.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-02-03.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/6/6a/ml3brfiev8r484j9kf1vdszl9oaqf6p.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-02-02.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/e/e5/t8ryekqznv3zjlybct8y2138fhllg81.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-02-01.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/2/28/87mqavagtd0ik0s24ghqtrzg3se4qjr.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-01-16.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/e/e8/793cfp9nlovuw5vvpoxncpui6e3l8oa.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-01-15.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/d/d9/o2tem27b3kheqoj6o5nehhjtlbwlo3n.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-01-14.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/a/a2/mzoldkvj7lzbw5gbfrvupgnf1i0fcsb.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-01-13.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/7/77/2mkqryrr5fp1h4zexnb4w0glk0ywbb6.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-01-12.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/c/cc/naywmt0mdg3xep284iqiqno40v1ct1i.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-01-11.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/9/9f/ncb4gptouz64oucnvax6g89jv5swo6l.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-01-10.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/0/0e/bselqslhayujkqltcnz4311y48gqt7k.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-01-09.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/2/2c/po8sdefxbb9tx77k0jhnteuxpft0xyv.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-01-08.png',
+			    'https://patchwiki.biligame.com/images/sr/thumb/0/09/0yupgl64oy0jmpxm5b99e18lfg28iip.png/180px-%E8%81%8A%E5%A4%A9%E8%A1%A8%E6%83%85-01-07.png'	
+			  ],
 
-			dialogs: [{
-				id: "dialog-1",
-				type: "text",
-				content: "hello，world",
-				is_me: !1,
-				user_id: "user-2"
-			}, {
-				id: "dialog-2",
-				type: "text",
-				content: "hello，world!!!",
-				is_me: !0,
-				user_id: "user-1"
-			}, {
-				id: "dialog-3",
-				type: "notice",
-				content: "2022年5月20日 下午5:20"
-			}, {
-				id: "dialog-4",
-				type: "transfer",
-				money: "1.00",
-				is_me: !0,
-				user_id: "user-1",
-				is_get: !1,
-				remark: "转账给马先生"
-			}, {
-				id: "dialog-5",
-				type: "transfer",
-				money: "1.00",
-				user_id: "user-2",
-				is_get: !0,
-				remark: "已领取"
-			}, {
-				id: "dialog-6",
-				type: "redpacket",
-				money: "1.00",
-				is_me: !0,
-				user_id: "user-1",
-				is_get: !1,
-				remark: "恭喜发财，大吉大利"
-			}, {
-				id: "dialog-7",
-				type: "redpacket",
-				money: "1.00",
-				user_id: "user-2",
-				is_get: !0,
-				remark: "恭喜发财，大吉大利"
-			}]
+			dialogs: []
 		},
 		methods: {
+			reload: function(){
+				if (confirm("确定删除？该操作无法撤销！")==true){ 
+				localStorage.clear();
+				location.reload();
+				}
+			},
 			addUser: function() {
 				this.users.push({
 					id: "user-" + (new Date).valueOf(),
-					name: "微信对话",
-					image: _path.images + "/face-default.jpg"
+					name: "路人A",
+					image: "./static/app/images/face-default.png"
 				})
 			},
 			delUser: function(A) {
+				if (confirm("确定删除？")==true){ 
 				var e = this.users[A],
 					t = this.dialogs.filter(function(A) {
 						return A.user_id != e.id
 					});
 				this.dialogs = t, this.users.splice(A, 1)
+				}
 			},
+			
+			//截长图
+			saveImage() {
+				  // 步骤一: 设置生成图片的名字
+				         var imgName = "pic.png";
+				         // 步骤二: 选择需要截取的dom, 可以更具需求修改选择器
+						 //修改overflow属性
+						 var viewbody=document.getElementById('phone-body');
+						 viewbody.style.overflow="visible";
+				         var shareContent = document.getElementById('phone');
+						 
+						 //修改top
+				         // 克隆一下需要截取的dom（这个操作必须有, 不然的话页面以外看不到的内容会截取不到）
+				         // 步骤三: 调用html2canvas 截图
+				         var copyDom = shareContent.cloneNode(true);
+				         copyDom.style.width = shareContent.scrollWidth + "px";
+				         copyDom.style.height = shareContent.scrollHeight + "px";
+				         document.querySelector("body").appendChild(copyDom);
+				         // 步骤三: 调用html2canvas 截图
+				         html2canvas(copyDom,
+						 {
+							 useCORS: true, 
+							 allowTaint: true
+							 }).then(function (canvas) {
+				             const context = canvas.getContext("2d");
+				             context.imageSmoothingEnabled = false;
+				             context.webkitImageSmoothingEnabled = false;
+				             context.msImageSmoothingEnabled = false;
+				             context.imageSmoothingEnabled = false;
+				             let imgUrl = canvas.toDataURL("image/png").replace("image/png","image/octet-stream");
+				             console.log(imgUrl);
+				             copyDom.remove();
+							 
+							   let a = document.createElement("a");
+							   a.href = imgUrl;
+							   a.download = imgName;
+							   document.body.appendChild(a);
+							   a.click();
+							   window.URL.revokeObjectURL(imgUrl);
+							   viewbody.style.overflow="auto";
+				         });
+			},
+			//人物详情
+			DetailModify(index) {
+				console.log("详情界面");
+			    this.users.forEach((user, i) => {
+			      if (i === index) {
+			        user.isDetailShow = true;
+			      } else {
+			        user.isDetailShow = false;
+			      }
+			    });
+			  },
+			   closeDetail(event) {
+			      if (
+			        event.target.closest(".detailmodify") === null &&
+			        event.target !== this.$refs.userDetailBtn
+			      ) {
+			        this.users.forEach((user) => {
+			          user.isDetailShow = false;
+			        });
+			      }
+			    },
+				closeDetail2(){
+					this.users.forEach((user) => {
+					  user.isDetailShow = false;
+					});
+				},
+			  selectUser(index) {
+			      this.users.forEach((user) => {
+			        user.selected = false;
+			        user.isDetailShow = false;
+			      });
+			      this.users[index].selected = true;
+			      this.users[index].isDetailShow = true;
+			      this.selectedUserIndex = index;
+			    },
+			
+			
 			addDialog: function(A) {
 				this.dialogs.push(A), setTimeout(function() {
 					$(".phone-body").scrollTop($(".phone-body .wechat-content").height())
@@ -5430,12 +5539,12 @@
 					type: "text",
 					content: this.setting.dialog_content,
 					name: A.name,
-					is_me: A.is_me,
+					is_me: this.setting.dialog_isme,
 					user_id: A.id
 				};
+				this.setting.dialog_content="";
 				this.addDialog(A)
 			},
-			
 			addImageDialog: function(A) {
 				var e = this.getSelectedUser();
 				if (!e) return alert("请选择用户"), !1;
@@ -5445,7 +5554,8 @@
 				r.onload = function() {
 					t.dealImage(r.result, {
 						width: 1260,
-						quality: .9
+						quality: .9,
+						alpha: true
 					}, function(A) {
 						A = {
 							id: "dialog-" + (new Date).valueOf(),
@@ -5460,29 +5570,47 @@
 				}, r.readAsDataURL(A)
 			},
 			//发送表情包
-			addEmojiDialog: function(A) {
-				var e = this.getSelectedUser();
-				if (!e) return alert("请选择用户"), !1;
-				var t = this,
-					A = A.target.files[0],
-					r = new FileReader;
-				r.onload = function() {
-					t.dealImage(r.result, {
-						width: 1260,
-						quality: .9
-					}, function(A) {
-						A = {
-							id: "dialog-" + (new Date).valueOf(),
-							type: "image",
-							image: A,
-							is_me: e.is_me,
-							user_id: e.id
-						};
-						t.addDialog(A)
-					})
-				}, r.readAsDataURL(A)
-			},
-			
+		addEmojiDialog: function() {
+			var e = this.getSelectedUser();
+			if (!e) return alert("请选择用户"), !1;
+            // 创建弹出框的 DOM 结构
+            var popup = document.createElement('div');
+            popup.className = 'popup-container';
+            var t = this;
+            document.body.addEventListener('click', function() {
+               popup.innerHTML = '';
+               popup.style.display = 'none';
+            });
+            // 遍历 imgs 数组，获取图片并添加到弹出框中
+            for (var i = 0; i < this.imgs.length; i++) {
+               var img = document.createElement('img');
+               var imgUrl = this.imgs[i];
+               img.src = imgUrl;
+               console.log(img.src);
+               img.style.maxWidth = '100px'; // 设置图片最大宽度
+               img.style.margin = '10px';
+               // 点击图片时将选中的图片添加到对话列表
+               img.addEventListener('click', (function(imgUrl) {
+                  return function() {
+                     var data = {
+                        id: 'dialog-' + new Date().valueOf(),
+                        type: 'image',
+                        image: imgUrl,
+                        name: e.name,
+                        is_me: e.is_me,
+                        user_id: e.id
+                     };
+                     t.addDialog(data);
+                     popup.innerHTML = '';
+                     popup.style.display = 'none';
+                  };
+               })(imgUrl));
+               // 将图片添加到弹出框中
+               popup.appendChild(img);
+            }
+            document.body.appendChild(popup);
+            popup.style.display = 'block';
+        },			
 			addRedpacketDialog: function() {
 				var A = this.getSelectedUser();
 				if (!A) return alert("请选择用户"), !1;
@@ -5519,17 +5647,19 @@
 				}, r.readAsDataURL(A)
 			},
 			setBackground: function(A) {
-				var e = this,
-					A = A.target.files[0],
-					t = new FileReader;
-				t.onload = function() {
-					e.dealImage(t.result, {
-						width: 1400,
-						quality: .9
-					}, function(A) {
-						e.$set(e.setting, "background", A)
-					})
-				}, t.readAsDataURL(A)
+				var file = event.target.files[0];
+				    var reader = new FileReader();
+				    var vm = this;
+				    reader.onload = function() {
+				      vm.dealImage(reader.result, {
+				        quality: 1
+				      }, function(imageData) {
+				        document.body.style.backgroundImage = 'url(' + imageData + ')';
+						document.body.style.backgroundSize='cover';
+				      });
+				    };
+				    reader.readAsDataURL(file);
+				  
 			},
 			deleteBackground: function() {
 				this.$set(this.setting, "background", "")
@@ -5571,8 +5701,66 @@
 				var A = this.getSelectedUser();
 				return A ? A.name : "未选择"
 			},
+			//是否自己发言
+			Isisme:function(){
+				var A = this.setting.dialog_isme;
+				return A ? "右" : "左"
+			},
+			//无确认的快速删除
+			quickdeleteDialog: function(A) {
+				this.dialogs.splice(A, 1);
+			},
+			//更换快速删除显示状态
+			disDelet: function(){
+				var A=document.querySelector(".a-wechat-dialog-trash");
+				var a=document.querySelectorAll(".a-wechat-dialog-trash");
+				var str;
+				if(A.style.display!='none')str='none';
+				else str='unset';
+				for(var i=0;i<a.length;i++){
+					a[i].style.display=str;
+				}
+			},
 			deleteDialog: function(A) {
-				this.dialogs.splice(A, 1)
+				if (confirm("确定删除？")==true){ 
+					this.dialogs.splice(A, 1);
+					this.closeEditDiv();
+				 }
+			},
+			//打开标题编辑框
+			openTitleEdit: function(){
+				var div=document.querySelector("#edit-title");
+				div.style.display="flex";
+			},
+			//编辑对话内容
+			editDialog: function(A){
+				//打开编辑框
+				var div=document.querySelector("#edit-dialog");
+				div.style.display="flex";
+				editIndex=A;
+				var edit=document.querySelector(".edit-phone-dialog-text");
+				if(this.dialogs[A].type==="image"){	
+				edit.value="图片消息无法编辑";
+				edit.disabled="disabled";
+				}else{
+					edit.disabled=false;
+					edit.value=this.dialogs[A].content;
+				}
+				//删除内容
+				var self=this;
+				document.getElementById("dialogDelete").onclick = function(){
+				self.deleteDialog(A);
+				}
+			},
+			closeEditDiv: function(ID){
+				//关闭编辑框
+				var div=document.querySelector(ID);
+				div.style.display="none";
+			},
+			confirmEdit: function(ID){
+				if (this.dialogs[editIndex].type==="text"&&!this.setting.edit_dialog_content) return alert("请输入对话内容");
+				else this.dialogs[editIndex].content=this.setting.edit_dialog_content;
+				this.closeEditDiv(ID);
 			},
 			getVoiceLength: function(A) {
 				return 380 / 59 * (A - 1)
@@ -5596,6 +5784,25 @@
 							.quality && (t = i.quality), r.toDataURL("image/jpeg", t));
 					o(B)
 				}
+			},
+			//系统提示
+			addNoticeDialog: function() {
+				var A = {
+						id: "dialog-" + (new Date).valueOf(),
+						type: "notice",
+						name: this.getSelectedUser().name,
+						content: this.setting.dialog_notice_remark,
+						notice_type:this.setting.notice_type
+					};
+				if(A.notice_type != null){
+				if(A.notice_type == 'Isdelete')A.content=A.name+"开启了朋友验证，你还不是他(她)朋友。请先发送朋友验证请求，对方验证通过后，才能聊天";
+				if(A.notice_type == 'Online')A.content="你的好友 "+A.name+" 已上线";
+				if(A.notice_type == 'Offline')A.content="你的好友 "+A.name+" 已下线";
+				if(A.notice_type == 'Custom')A.content=this.setting.dialog_notice;
+				this.setting.dialog_notice="";
+				this.addDialog(A)
+				}
+				else alert("请先选择消息类型")
 			},
 			redpacketGet: function(A) {
 				var e = this.dialogs[A],
@@ -5635,7 +5842,7 @@
 			onBackgroundLoad: function(A) {
 				(A.target.width >= A.target.height || A.target.width < 1750 || A.target.height <
 				2436) && $(A.target).addClass("phone-bg-for-height")
-			}
+			},
 		},
 		watch: {
 			setting: {
