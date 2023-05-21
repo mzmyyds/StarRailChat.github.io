@@ -117,7 +117,7 @@
 							<option value="Custom">自定义信息</option>
 						</select>
 						<input class="form-control" v-if="setting.notice_type === 'Custom'" style="min-height: 32px;width: 179px;" v-model="setting.dialog_notice" placeholder="输入自定义信息"/>
-						<input v-if="setting.notice_type !== 'Custom'" style="min-height: 32px;" placeholder="" disabled/>
+						<input v-if="setting.notice_type !== 'Custom'" style="min-height: 32px;max-width: 150px;" placeholder="" disabled/>
 							<button @click="addNoticeDialog" class="btn btn-primary" style="width: 90px;padding: 0;">添加系统提示</button>
 						</div>
 						
